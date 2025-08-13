@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  mcp:
+    build:
+      context: .
+    image: mcp-filesystem:latest
+    container_name: mcp-filesystem
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./mcp_filesystem:/app/mcp_filesystem
+      # Example of mounting a host directory to be accessible by the MCP
+      # - /home/user/shared:/data
+    command: start --host 0.0.0.0 --port 8000 --allowed-dirs /app --allowed-dirs /data
