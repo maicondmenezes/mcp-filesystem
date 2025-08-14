@@ -10,10 +10,18 @@ SHELL := /bin/bash
 				start-dev-env \
 				clean \
 				run \
-				build-docker
+				build-docker \
+				config-copilot \
+				config-gemini \
+				config-cline \
+				test-mcp \
+				test-copilot \
+				test-gemini \
+				test-cline
 
 PYTHON_VERSION := 3.12
 PROJECT_NAME := mcp-filesystem
+PROJECT_DIR := $(shell pwd)
 
 default: help
 
@@ -33,6 +41,17 @@ help: ## Show this help message
 	@echo "   1. make setup-dev"
 	@echo "   2. make test"
 	@echo "   3. make start-dev-env"
+	@echo ""
+	@echo "🤖 AI Client Configuration:"
+	@echo "   make config-copilot   - Configure for GitHub Copilot"
+	@echo "   make config-gemini    - Configure for Gemini Code Assist"
+	@echo "   make config-cline     - Configure for Cline"
+	@echo ""
+	@echo "🧪 MCP Testing:"
+	@echo "   make test-mcp         - Test all AI clients connectivity"
+	@echo "   make test-copilot     - Test GitHub Copilot configuration"
+	@echo "   make test-gemini      - Test Gemini Code Assist configuration"
+	@echo "   make test-cline       - Test Cline configuration"
 	@echo ""
 
 # ====================================================================================
@@ -140,6 +159,35 @@ build-docker: ## Constrói a imagem Docker
 	@echo "🐳 Construindo imagem Docker..."
 	@docker build -t $(PROJECT_NAME):latest .
 	@echo "✅ Imagem construída: $(PROJECT_NAME):latest"
+
+# ====================================================================================
+# AI CLIENT CONFIGURATION
+# ====================================================================================
+
+config-copilot: ## Configura MCP automaticamente para GitHub Copilot
+	@echo "🤖 Configurador automático do GitHub Copilot..."
+	@python3 scripts/setup-ai-clients.py copilot
+
+config-gemini: ## Configura MCP automaticamente para Gemini Code Assist
+	@echo "🤖 Configurador automático do Gemini Code Assist..."
+	@python3 scripts/setup-ai-clients.py gemini
+
+config-cline: ## Configura MCP automaticamente para Cline
+	@echo "🤖 Configurador automático do Cline..."
+	@python3 scripts/setup-ai-clients.py cline
+
+test-mcp: ## Testa conectividade MCP com todos os clientes
+	@echo "🧪 Testando conectividade MCP..."
+	@python3 scripts/test-mcp.py all
+
+test-copilot: ## Testa configuração do GitHub Copilot
+	@python3 scripts/test-mcp.py copilot
+
+test-gemini: ## Testa configuração do Gemini Code Assist
+	@python3 scripts/test-mcp.py gemini
+
+test-cline: ## Testa configuração do Cline
+	@python3 scripts/test-mcp.py cline
 
 # ====================================================================================
 # CLEANING

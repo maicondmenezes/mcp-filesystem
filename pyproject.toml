@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mcp-filesystem"
-version = "0.1.0"
+version = "0.2.0"
 description = "MCP server for filesystem operations - provides secure file system access through Model Context Protocol"
 authors = ["Frank Team <team@frank.dev>"]
 license = "MIT"
