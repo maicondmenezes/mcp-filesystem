@@ -11,13 +11,7 @@ SHELL := /bin/bash
 				clean \
 				run \
 				build-docker \
-				config-copilot \
-				config-gemini \
-				config-cline \
-				test-mcp \
-				test-copilot \
-				test-gemini \
-				test-cline
+				config-client
 
 PYTHON_VERSION := 3.12
 PROJECT_NAME := mcp-filesystem
@@ -43,15 +37,8 @@ help: ## Show this help message
 	@echo "   3. make start-dev-env"
 	@echo ""
 	@echo "🤖 AI Client Configuration:"
-	@echo "   make config-copilot   - Configure for GitHub Copilot"
-	@echo "   make config-gemini    - Configure for Gemini Code Assist"
-	@echo "   make config-cline     - Configure for Cline"
+	@echo "   make config-client    - Configurar cliente AI (seleção interativa)"
 	@echo ""
-	@echo "🧪 MCP Testing:"
-	@echo "   make test-mcp         - Test all AI clients connectivity"
-	@echo "   make test-copilot     - Test GitHub Copilot configuration"
-	@echo "   make test-gemini      - Test Gemini Code Assist configuration"
-	@echo "   make test-cline       - Test Cline configuration"
 	@echo ""
 
 # ====================================================================================
@@ -138,18 +125,12 @@ format: ## Formata o código usando black e isort
 
 lint: ## Executa os linters para verificar a qualidade do código
 	@echo "🔍 Executando linters..."
-	@poetry run flake8 mcp_filesystem tests
-	@poetry run mypy mcp_filesystem
-	@echo "✅ Linting completo."
+	@poetry run pre-commit run --all-files
 
 test: ## Executa os testes unitários com coverage
 	@echo "🧪 Executando testes com coverage..."
 	@poetry run pytest --cov=mcp_filesystem --cov-report=html --cov-report=term
 	@echo "✅ Testes concluídos. Relatório HTML em htmlcov/"
-
-test-verbose: ## Executa os testes em modo verboso
-	@echo "🧪 Executando testes em modo verboso..."
-	@poetry run pytest -v --cov=mcp_filesystem
 
 # ====================================================================================
 # DOCKER
@@ -164,30 +145,10 @@ build-docker: ## Constrói a imagem Docker
 # AI CLIENT CONFIGURATION
 # ====================================================================================
 
-config-copilot: ## Configura MCP automaticamente para GitHub Copilot
-	@echo "🤖 Configurador automático do GitHub Copilot..."
-	@python3 scripts/setup-ai-clients.py copilot
+config-client: ## Configura MCP para cliente AI (seleção interativa)
+	@echo "🤖 Configurador automático do cliente AI..."
+	@python3 scripts/setup-ai-clients.py
 
-config-gemini: ## Configura MCP automaticamente para Gemini Code Assist
-	@echo "🤖 Configurador automático do Gemini Code Assist..."
-	@python3 scripts/setup-ai-clients.py gemini
-
-config-cline: ## Configura MCP automaticamente para Cline
-	@echo "🤖 Configurador automático do Cline..."
-	@python3 scripts/setup-ai-clients.py cline
-
-test-mcp: ## Testa conectividade MCP com todos os clientes
-	@echo "🧪 Testando conectividade MCP..."
-	@python3 scripts/test-mcp.py all
-
-test-copilot: ## Testa configuração do GitHub Copilot
-	@python3 scripts/test-mcp.py copilot
-
-test-gemini: ## Testa configuração do Gemini Code Assist
-	@python3 scripts/test-mcp.py gemini
-
-test-cline: ## Testa configuração do Cline
-	@python3 scripts/test-mcp.py cline
 
 # ====================================================================================
 # CLEANING
