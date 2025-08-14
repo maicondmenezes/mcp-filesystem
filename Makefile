@@ -10,10 +10,12 @@ SHELL := /bin/bash
 				start-dev-env \
 				clean \
 				run \
-				build-docker
+				build-docker \
+				config-client
 
 PYTHON_VERSION := 3.12
 PROJECT_NAME := mcp-filesystem
+PROJECT_DIR := $(shell pwd)
 
 default: help
 
@@ -33,6 +35,10 @@ help: ## Show this help message
 	@echo "   1. make setup-dev"
 	@echo "   2. make test"
 	@echo "   3. make start-dev-env"
+	@echo ""
+	@echo "🤖 AI Client Configuration:"
+	@echo "   make config-client    - Configurar cliente AI (seleção interativa)"
+	@echo ""
 	@echo ""
 
 # ====================================================================================
@@ -119,18 +125,12 @@ format: ## Formata o código usando black e isort
 
 lint: ## Executa os linters para verificar a qualidade do código
 	@echo "🔍 Executando linters..."
-	@poetry run flake8 mcp_filesystem tests
-	@poetry run mypy mcp_filesystem
-	@echo "✅ Linting completo."
+	@poetry run pre-commit run --all-files
 
 test: ## Executa os testes unitários com coverage
 	@echo "🧪 Executando testes com coverage..."
 	@poetry run pytest --cov=mcp_filesystem --cov-report=html --cov-report=term
 	@echo "✅ Testes concluídos. Relatório HTML em htmlcov/"
-
-test-verbose: ## Executa os testes em modo verboso
-	@echo "🧪 Executando testes em modo verboso..."
-	@poetry run pytest -v --cov=mcp_filesystem
 
 # ====================================================================================
 # DOCKER
@@ -140,6 +140,15 @@ build-docker: ## Constrói a imagem Docker
 	@echo "🐳 Construindo imagem Docker..."
 	@docker build -t $(PROJECT_NAME):latest .
 	@echo "✅ Imagem construída: $(PROJECT_NAME):latest"
+
+# ====================================================================================
+# AI CLIENT CONFIGURATION
+# ====================================================================================
+
+config-client: ## Configura MCP para cliente AI (seleção interativa)
+	@echo "🤖 Configurador automático do cliente AI..."
+	@python3 scripts/setup-ai-clients.py
+
 
 # ====================================================================================
 # CLEANING

@@ -46,7 +46,6 @@ def start(
     print(f"Allowed directories: {allowed_dirs}")
 
     try:
-        # Import here to avoid circular imports and handle missing dependencies gracefully
         from mcp_filesystem.mcp.server import start_server
 
         asyncio.run(start_server(allowed_dirs))

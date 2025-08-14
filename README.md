@@ -53,6 +53,7 @@ make start-dev-env
 ### Comandos Make Disponíveis
 
 #### Setup e Dependências
+
 - `make setup-dev` - Configura ambiente completo (Python, dependências, hooks)
 - `make install` - Instala dependências usando Poetry
 - `make check-deps` - Verifica se pyenv e poetry estão instalados
@@ -60,19 +61,23 @@ make start-dev-env
 - `make set-pre-commit` - Instala hooks do pre-commit
 
 #### Desenvolvimento
+
 - `make start-dev-env` - Inicia servidor MCP em modo desenvolvimento
 - `make run` - Executa o CLI da aplicação
 
 #### Qualidade de Código e Testes
+
 - `make format` - Formata código (black + isort)
 - `make lint` - Executa linters (flake8 + mypy)
 - `make test` - Executa testes com coverage
 - `make test-verbose` - Executa testes em modo verboso
 
 #### Docker
+
 - `make build-docker` - Constrói imagem Docker
 
 #### Limpeza
+
 - `make clean` - Remove arquivos temporários
 - `make clean-all` - Limpeza completa (incluindo .venv)
 
@@ -94,46 +99,48 @@ mcp-filesystem validate-dirs /path/to/dir1 /path/to/dir2
 mcp-filesystem version
 ```
 
-### Integração com Claude Desktop
+## 🧩 Configuração Automática de Cliente MCP
 
-```json
-{
-  "servers": {
-    "filesystem": {
-      "command": "poetry",
-      "args": ["run", "mcp-filesystem", "start", "--allowed-dirs", "/home/user/projects"],
-      "cwd": "/path/to/mcp-filesystem"
-    }
-  }
-}
+O projeto agora possui um comando único para configurar clientes MCP populares (Copilot, Gemini, Cline e outros) de forma interativa.
+
+### Como usar o configurador
+
+Basta executar:
+
+```bash
+make config-client
 ```
+
+O fluxo interativo irá:
+
+- Perguntar qual cliente deseja configurar
+- Sugerir o caminho padrão do arquivo de configuração
+- Permitir busca automática ou entrada manual do caminho
+- Solicitar diretórios permitidos para o MCP
+- Atualizar o arquivo de configuração do cliente de forma segura e não destrutiva
+
+Após a execução, siga as instruções exibidas para recarregar o VS Code ou o cliente escolhido.
+
+### Estrutura dos scripts de configuração
+
+Os scripts estão organizados em:
+
+- `scripts/config_paths.py`: seleção e detecção do caminho de configuração
+- `scripts/file_search.py`: busca automática de arquivos de configuração
+- `scripts/mcp_config.py`: geração e atualização dos blocos MCP
+- `scripts/main.py`: orquestração do fluxo interativo
+
+Após validar a nova estrutura, arquivos antigos/redundantes podem ser removidos do diretório `scripts`.
 
 ## 🧪 Testes
 
 ```bash
-# Testes completos com coverage
+# Testes unitários com coverage
 make test
-
-# Testes verbosos
-make test-verbose
 
 # Linting
 make lint
 ```
-
-## 🏗️ Arquitetura
-
-```
-CLI (main.py) → MCP Server → Controller → Service → Storage
-```
-
-- **CLI**: Interface de linha de comando (Typer)
-- **MCP Server**: Implementação do protocolo MCP via stdio
-- **Controller**: Descoberta automática de ferramentas e coordenação
-- **Service**: Lógica de negócios com validação Pydantic
-- **Storage**: Operações seguras no sistema de arquivos
-
-## 🛠️ Desenvolvimento
 
 ### Configuração Inicial
 
@@ -211,5 +218,3 @@ MIT License - veja o arquivo LICENSE para detalhes.
 8. Abra um Pull Request
 
 ---
-
-**✅ Pronto para usar com Claude Desktop! 🎉**

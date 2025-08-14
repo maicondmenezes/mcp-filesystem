@@ -22,7 +22,7 @@ async def start_server(allowed_directories: List[str]) -> None:
     Start the MCP filesystem server.
 
     Args:
-        allowed_directories: List of directories where operations are permitted.
+        allowed_directories: List of dirs where operations are permitted.
     """
     controller = McpFilesystemController(allowed_directories)
     server = Server("mcp-filesystem")
